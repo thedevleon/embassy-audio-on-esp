@@ -12,7 +12,7 @@ rustflags = [
 target = "riscv32imc-unknown-none-elf"
 
 [unstable]
-build-std = ["core"]
+build-std = ["alloc", "core"]
 
 [env]
 ESP_LOGLEVEL="INFO"

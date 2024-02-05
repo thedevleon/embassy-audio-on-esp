@@ -2,6 +2,8 @@
 #![no_main]
 #![feature(type_alias_impl_trait)]
 
+extern crate alloc;
+use core::mem::MaybeUninit;
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer, Ticker, Instant};
 use embassy_sync::signal::Signal;
@@ -22,6 +24,18 @@ use smart_leds::{
     brightness, gamma, SmartLedsWrite, RGB8
 };
 use rgb::RGBA8;
+
+#[global_allocator]
+static ALLOCATOR: esp_alloc::EspHeap = esp_alloc::EspHeap::empty();
+
+fn init_heap() {
+    const HEAP_SIZE: usize = 32 * 1024;
+    static mut HEAP: MaybeUninit<[u8; HEAP_SIZE]> = MaybeUninit::uninit();
+
+    unsafe {
+        ALLOCATOR.init(HEAP.as_mut_ptr() as *mut u8, HEAP_SIZE);
+    }
+}
 
 const SINE: [i16; 64] = [
     0, 3211, 6392, 9511, 12539, 15446, 18204, 20787, 23169, 25329, 27244, 28897, 30272, 31356,
@@ -132,6 +146,8 @@ async fn main(spawner: Spawner) {
     esp_println::logger::init_logger_from_env();
 
     log::info!("Hello, world!");
+
+    init_heap();
 
     // This needs the features esp32c6-hal/embassy-time-systick !AND! embassy-time/tick-hz-16_000_000
     embassy::init(
