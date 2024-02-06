@@ -1,8 +1,8 @@
-# Embassy on ESP
-with no_std, async, embassy, leds and more!
+# Embassy on ESP with Audio
+with no_std, async, embassy, i2s and more!
 
 ## Hardware
-ESP32-C6-DevKitM-1 (for now, until a proper C6 devboard comes around... or maybe I should just make one?)
+[ESP32-C3 Pico](https://www.wemos.cc/en/latest/c3/c3_pico.html) (for now...)
 
 ## Setup
 1. Install Rust >=1.75 via rustup (https://rustup.rs/)
